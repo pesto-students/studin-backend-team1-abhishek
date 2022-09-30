@@ -1,3 +1,5 @@
+MRC pattern is used for the separation of concerns.
+
 NodeJS style guide:
 
 1.Indentation 2 spaces

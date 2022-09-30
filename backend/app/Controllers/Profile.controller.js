@@ -1,23 +1,43 @@
 const { profileService } = require('../services/Profile.service');
 
-const getMyProfileSummary = () => {
-
+const getMyProfileSummary = async(req,res) => {
+	try {
+		return
+	} catch (error) {
+		return
+	}
 };
 
-const getMyProfileDetails = () => {
-
+const getMyProfileDetails = async(req,res) => {
+	try {
+		return
+	} catch (error) {
+		return
+	}
 };
 
-const updateMyProfileDetails = () => {
-    
+const updateMyProfileDetails = async(req,res) => {
+	try {
+		return
+	} catch (error) {
+		return
+	}
 };
 
-const getAllConnectionsDetails = () => {
-
+const getAllConnectionsDetails = async(req,res) => {
+	try {
+		return
+	} catch (error) {
+		return
+	}
 };
 
-const getConnectionDetails = () => {
-
+const getConnectionDetails = async(req,res) => {
+	try {
+		return
+	} catch (error) {
+		return
+	}
 };
 
 module.exports = {
