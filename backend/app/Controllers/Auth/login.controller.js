@@ -29,12 +29,11 @@ const login = async (req, res) => {
 			}
 		}
 		console.log('OTP matches, login successful!')
-
-
 		return
 	}
 	catch (error) {
 		res.status(400).json({ status: 400 })
+    return
 	}
 };
 

@@ -5,20 +5,19 @@ const ObjectId = Schema.ObjectId;
 
 const PostSchema = new Schema({
     // user_id: ObjectId,
-    post_author: {
+    user_id: {
       type: MyObjectId,
       ref: 'User'
     },
-    post_title: {
-      type: String,
-      required: true
-    },
-    post_content: {
+    title: {
       type: String
     },
-    post_image: {
+    content: {
+      type: String
+    },
+    image_url: {
       type: String,
-      get: (post_image) => (post_image ? `${process.env.BASE_URL}${post_image}` : post_image),
+      get: (post_image) => (post_image ? `${post_image}` : post_image),
     },
     likes: [{
       type: MyObjectId,

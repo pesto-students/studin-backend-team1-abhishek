@@ -37,8 +37,9 @@ const UserSchema = new Schema({
       default: ""
     },
     interests: {
-      type: Array,
-      default: [],
+      type: String,
+      enum: ['Music', 'Art', 'Sports', 'Literature', 'History', 'Science', 'Technology', 'Gardening', 'Entertainment']
+      // default: [],
     },    
     bio: {
       type: String,
@@ -54,11 +55,7 @@ const UserSchema = new Schema({
       type: MyObjectId,
       ref: 'Post'
     }],
-    connections: [{
-      email: {type: String, default: ""},
-      first_name: {type: String, default: ""},
-      last_name: {type: String, default: ""}
-    }],
+    connections: [{ type: MyObjectId, ref: 'User' }],
     connection_requests: [{
       type: MyObjectId,
       ref: 'ConnectionRequest'
