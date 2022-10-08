@@ -1,6 +1,9 @@
 // const postsService = require('../services/Posts.service')
+const cloudinary = require('../helpers/init_cloudinary');
+
 const Post = require('../Models/Posts.model')
 const User = require('../Models/User.model')
+const baseUrl = process.env.NEXT_STATIC_BASE_URL || "http://localhost:9000";
 
 const getPost = async (req, res) => {
 	try {
@@ -18,11 +21,19 @@ const getPost = async (req, res) => {
 
 const getAllPosts = async (req, res) => {
 	try {
-		const allPosts = await Post.find()
-		res.status(200).json({status: "OK", data: allPosts})
+		const {body} = req;
+		const currentUser = await User.findOne({
+			email: body.email
+		})
+		const allPosts = await Post.find({
+			user_id: currentUser._id
+		})
+		// console.log(allPosts)
+		res.status(200).send({status: "OK", data: allPosts})
 		return
 		// res.status(200).send("Get all posts for current user");
 	} catch (error) {
+		console.log(error)
 		console.log('Error occured when retrieving all posts')
 		return
 	}
@@ -30,23 +41,35 @@ const getAllPosts = async (req, res) => {
 const createPost = async (req, res) => {
 	try {
 		const { body } = req;
+		console.log(body)
+		// console.log(req.files)
+		// console.log(body)
 		// if (!body.post_title || !body.post || !body.likes || !body.comments){
 		// 	return;
 		// }
-		const currentUser = await User.findOne({email: 'test@gmail.com'})
-		// const currentUser = User.findById('63368e37db18210e620a568f')
-		console.log(currentUser._id)
-		console.log('creating a new post 3')
+
+		const file = req.files.image;
+		const imageResult = await cloudinary.uploader.upload(file.tempFilePath, {
+			public_id: `${Date.now()}`,
+			resource_type: 'auto',
+			folder: 'studin/posts'
+		})
+		// console.log(`image result --> ${imageResult}`)
+		// console.log(imageResult);
+		const currentUser = await User.findOne({
+			email: 'test@gmail.com'
+		})
+		// console.log(currentUser)
 		const newPost = {
-			post_author: currentUser._id,
-			post_title: 'Killer Miller',
-			post_content: 'random post content',
-			post: 'Miller walked down the lane like a dumb killer',
-			post_image: '',
-			likes: [],
-			comments: []
+			user_id: currentUser._id,
+			// title: body.title ,
+			content: body.content,
+			image_url: imageResult.url,
+		// 	// likes: [],
+		// 	// comments: []
 		}
 		const createdPost = await Post.create(newPost);
+		console.log(createdPost)
 		res.status(201).json({ status: "OK", data: createdPost });
 		return
 	} catch (error) {
@@ -54,7 +77,6 @@ const createPost = async (req, res) => {
 		console.log(error)
 		return
 	}
-
 };
 
 const deletePost = async (req, res) => {
