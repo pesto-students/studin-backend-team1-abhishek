@@ -6,6 +6,9 @@ const createError = require('http-errors');
 const Sentry = require('@sentry/node');
 const SentryTracing = require('@sentry/tracing');
 const mongoClient = require('./helpers/init_mongodb');
+// const cloudinary=require('./helpers/init_cloudinary')
+const fileupload=require('express-fileupload')
+
 // const redisClient = require('./helpers/init_redis');
 const bodyParser = require('body-parser');
 const upload = require('express-fileupload');
@@ -36,6 +39,12 @@ app.use(express.json({limit: '25mb'}));
 app.use(cookieParser());
 app.use(helmet());
 app.use(bodyParser.json())
+app.use(
+    fileupload({
+        useTempFiles: true,
+        tempFileDir: "/tmp/",
+    })
+);
 
 //view engine
 app.set('view engine', 'ejs');

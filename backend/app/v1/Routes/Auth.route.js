@@ -15,4 +15,6 @@ router.post('/logout', controllers.logout)
 router.route('/sendEmailOTP').post(controllers.sendOTP)
 // auRouter.get('/verifyEmailOTP', controllers.verifyOTP)
 
+router.post('/profileimage', controllers.profileImage)
+
 module.exports = router;
