@@ -18,7 +18,7 @@ const sendOTP =  async (req, res) => {
 		// send mail with defined transport object
 		var mailOptions = {
 			from: 'Studin-admin@gmail.com',
-			to: req.body.email,
+			to: req.body.useremail,
 			subject: "Otp for registration is: ",
 			html: "<h3>OTP for account verification is </h3>" + "<h1 style='font-weight:bold;'>" + otp + "</h1>" // html body
 		};
@@ -30,7 +30,7 @@ const sendOTP =  async (req, res) => {
 			}else {
 				console.log('Message sent: %s', info.messageId);
 				// console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-				res.status(200).send({message: "Mail sent", messageId: info.messageId})
+				res.status(200).json({status:200 , message: "Mail sent", messageId: info.messageId})
 				
 				let otpRes = await Otp.create({
 					email: info.envelope.to,
