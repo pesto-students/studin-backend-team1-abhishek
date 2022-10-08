@@ -8,7 +8,7 @@ const login = async (req, res) => {
 		console.log(req.body)
 		let { email, otp } = req.body;
 		const user = await Otp.findOne({
-			otp: otp
+			email:email
 		});
 		if (!user) {
 			return [false, 'User not found'];
