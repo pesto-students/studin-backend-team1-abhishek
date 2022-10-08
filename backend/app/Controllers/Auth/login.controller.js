@@ -21,6 +21,8 @@ const login = async(req,res) => {
 		res.status(201).json(signedJwt)
 		return
 	} catch (error) {
+		console.log(error)
+		console.log("Error occured at login")
 		return
 	}
 };

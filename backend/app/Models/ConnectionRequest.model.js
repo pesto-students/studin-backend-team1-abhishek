@@ -3,11 +3,11 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const ConnectionRequestSchema = new Schema({
-    sender: {
+    sender_id: {
       type: Schema.Types.ObjectId,
       ref: 'User',
     },
-    receiver: {
+    receiver_id: {
       type: Schema.Types.ObjectId,
       ref: 'User',
     },

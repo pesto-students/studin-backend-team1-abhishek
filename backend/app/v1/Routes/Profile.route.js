@@ -3,7 +3,7 @@ const router = require('express').Router()
 
 router.put('/profileDetails', controllers.updateMyProfileDetails);
 
-router.get('/profileSummary', controllers.getMyProfileSummary)
+router.post('/profileSummary', controllers.getMyProfileSummary)
 router.get('/profileDetails', controllers.getMyProfileDetails)
 
 router.get('/allConnections', controllers.getAllConnectionsDetails);

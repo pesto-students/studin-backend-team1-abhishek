@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const MyObjectId = mongoose.Types.ObjectId;
 
 const OtpSchema = new Schema({
-    user: { type: MyObjectId, ref: 'User' },
+    user_id: { type: MyObjectId, ref: 'User' },
     // loggedin_user: { type: String, required: true, unique: true },
     otp: {
       type: String,
@@ -12,6 +12,8 @@ const OtpSchema = new Schema({
   },
   { timestamps: true, toJSON: { getters: true } },
 );
+
+OtpSchema.index({createdAt: 1},{expireAfterSeconds: 110});
 
 const Otp = mongoose.model('Otp', OtpSchema);
 module.exports = Otp;
