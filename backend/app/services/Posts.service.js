@@ -1,23 +1,23 @@
 const getPost = () => {
-    return;
+  return;
 };
 
 const getAllPosts = () => {
-    const allPosts = PostData.getAllPosts();
-    return allPosts;
+  const allPosts = PostData.getAllPosts();
+  return allPosts;
 };
 
 const createPost = () => {
-    return;
+  return;
 };
 
 const deletePost = () => {
-    return;
-}
+  return;
+};
 
 module.exports = {
-    getPost,
-    getAllPosts,
-    createPost,
-    deletePost
-}
+  getPost,
+  getAllPosts,
+  createPost,
+  deletePost,
+};

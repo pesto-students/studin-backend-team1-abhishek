@@ -1,5 +1,6 @@
-const controllers = require('../../Controllers/Connections.controller')
-const router = require('express').Router()
+const controllers = require('../../Controllers/Connections.controller');
+const express = require('express');
+const router = new express.Router();
 
 // router.get('/', controllers.allConnections)
 // router.post('/', controllers.createConnection)
