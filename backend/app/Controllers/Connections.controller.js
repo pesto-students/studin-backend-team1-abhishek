@@ -1,9 +1,10 @@
 // const {connectionService} = require('../services/Connections.service');
 
-const getConnections = async (req, res) => {
+const getAllConnections = async (req, res) => {
   try {
     const id = req.params.id;
-    const post = await connectionService.usefulService(id);
+    const allConnections = await 
+    // const post = await connectionService.usefulService(id);
     res.json(post);
     return;
   } catch (err) {
@@ -29,7 +30,7 @@ const removeConnection = async (req, res) => {
 };
 
 module.exports = {
-  getConnections,
+  getAllConnections,
   addConnection,
   removeConnection,
 };

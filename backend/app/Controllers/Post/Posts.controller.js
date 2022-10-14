@@ -1,6 +1,6 @@
 // const postsService = require('../services/Posts.service')
 const cloudinary = require('../../Helpers/init_cloudinary');
-
+const Sentry = require('@sentry/node');
 const Post = require('../../Models/Posts.model');
 const User = require('../../Models/User.model');
 // const baseUrl = process.env.NEXT_STATIC_BASE_URL || 'http://localhost:9000';
@@ -32,7 +32,7 @@ const getAllPosts = async (req, res) => {
     return;
     // res.status(200).send("Get all posts for current user");
   } catch (error) {
-    Sentry.captureException(e);
+    Sentry.captureException(error);
     console.log(error);
     console.log('Error occured when retrieving all posts');
     return;

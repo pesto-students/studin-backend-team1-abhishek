@@ -1,12 +1,14 @@
-const controllers = require('../../Controllers/Connections.controller');
+const controllers = require('../../Controllers/Connections');
 const express = require('express');
 const router = new express.Router();
 
-// router.get('/', controllers.allConnections)
-// router.post('/', controllers.createConnection)
+router.get('/allUsers', controllers.getAllUsers)
+router.get('/top5Users', controllers.getTop5Users)
+// router.get('/allConnections', controllers.getAllConnections)
+// router.get('/top5Connections', controllers.getTop5Connections)
 
-router.get('/connect/:user_id', controllers.getConnections);
-router.post('/connect', controllers.addConnection);
-router.delete('/connect', controllers.removeConnection);
+// router.get('/connect/:user_id', controllers.getAllConnections);
+router.post('/addConnection', controllers.addConnection);
+// router.delete('/connect', controllers.removeConnection);
 
 module.exports = router;
