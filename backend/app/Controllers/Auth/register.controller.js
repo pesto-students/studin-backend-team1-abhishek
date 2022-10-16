@@ -1,51 +1,55 @@
-const { authService } = require('../../Services/Auth.service');
-
-const findUserByEmail = async (email) => {
-	const user = await User.findOne({
-	  email,
-	});
-	if (!user) {
-	  return false;
-	}
-	return user;
-  };
-  
-  const createUser = async (email, password) => {
-	const hashedPassword = await encrypt(password);
-	const otpGenerated = generateOTP();
-	const newUser = await User.create({
-	  email,
-	  password: hashedPassword,
-	  otp: otpGenerated,
-	});
-	if (!newUser) {
-	  return [false, 'Unable to sign you up'];
-	}
-	try {
-	  await sendMail({
-		to: email,
-		OTP: otpGenerated,
-	  });
-	  return [true, newUser];
-	} catch (error) {
-	  return [false, 'Unable to sign up, Please try again later', error];
-	}
-  };
+const cloudinary = require('../../Helpers/init_cloudinary');
+// const createToken = require('../../Services/Auth.service');
+const createToken = require('../../Middlewares/generateJWT');
+const Sentry = require('@sentry/node');
+const User = require('../../Models/User.model');
 
 const register = async (req, res) => {
-	const { email, otp } = req.body;
-	const isExisting = await findUserByEmail(email);
-	if (isExisting) {
-	  return res.send('Already existing');
-	}
-	// create new user
-	const newUser = await createUser(email, otp);
-	if (!newUser[0]) {
-	  return res.status(400).send({
-		message: 'Unable to create new user',
-	  });
-	}
-	res.send(newUser);
-  };
+  try {
+    if (!req.body) {
+      res.status(400).send('Insufficient data');
+    }
+    const {
+      userId, firstName, lastName, schoolName, collegeName, interests,
+    } = req.body;
+    const file = req.files.image;
+
+    const imageResult = await cloudinary.uploader.upload(file.tempFilePath, {
+      public_id: `${Date.now()}`,
+      resource_type: 'auto',
+      folder: 'studin/users-profile-images',
+    });
+
+    const payload = {
+      email: userId,
+      firstName: firstName,
+      lastName: lastName,
+      schoolName: schoolName,
+      collegeName: collegeName,
+      // interests: interests,
+      profilePhoto: imageResult.secure_url,
+    };
+    const newUser = await User.create(payload);
+    const signedJwt = await createToken({'email': userId}, "access");
+    res
+      .cookie("accessToken", `Bearer ${signedJwt}`, {
+        httponly: true,
+        sameSite: "none",
+        secure: true,
+        maxAge: 1000 * 60 * 30,
+      })
+      .header("Access-Control-Allow-Credentials", true)
+      .header("Origin-Allow-Credentials", true)
+      .json({ data: signedJwt, status: 200});
+    console.log('cookie created successfully');
+    res.json({status: 200, accessToken: signedJwt});
+  } catch (error) {
+      return res.send({
+        status: 400,
+        error: error.message,
+        message: 'Unable to create new user',
+      });
+  }
+};
 
 module.exports = register;
