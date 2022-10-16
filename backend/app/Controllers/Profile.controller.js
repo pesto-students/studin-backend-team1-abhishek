@@ -3,7 +3,6 @@ const User = require('../Models/User.model');
 
 const getMyProfileSummary = async (req, res) => {
   try {
-    console.log('Inside profile summary');
     const {body} = req;
     const currentUser = await User.findOne({
       email: body.email,

@@ -43,7 +43,7 @@ const sendOTP = async (req, res) => {
           const userIdProper = await User.findOne({
             email: req.body.useremail
           })
-          console.log('Proper user id -->', userIdProper);
+          // console.log('Proper user id -->', userIdProper);
           const otpOptions  = {
             // userId: userIdProper ? userIdProper._id : '',
             email: info.envelope.to[0],
@@ -52,7 +52,7 @@ const sendOTP = async (req, res) => {
             otpOptions.userId = userIdProper._id
           }
           const otpRes = await Otp.create(otpOptions);
-          console.log(`OTP Res --> ${otpRes}`);
+          // console.log(`OTP Res --> ${otpRes}`);
           return;
         }
       });

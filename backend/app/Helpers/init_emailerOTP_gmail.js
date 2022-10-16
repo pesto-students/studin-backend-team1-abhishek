@@ -1,11 +1,11 @@
 const nodemailer = require('nodemailer');
-const google = require('googleapis');
+const {google} = require('googleapis');
 const Sentry = require('@sentry/node');
 
 const { GMAIL_CLIENT_ID, GMAIL_CLIENT_SECRET, GMAIL_REDIRECT_URI, GMAIL_REFRESH_TOKEN} = process.env;
 
-const oAuth2Client =  new google.oauth2_v2.Oauth2(GMAIL_CLIENT_ID, GMAIL_CLIENT_SECRET, GMAIL_REDIRECT_URI);
-oAuth2Client.tokeninfo({refresh_token: GMAIL_REFRESH_TOKEN});
+const oAuth2Client =  new google.auth.OAuth2(GMAIL_CLIENT_ID, GMAIL_CLIENT_SECRET, GMAIL_REDIRECT_URI);
+oAuth2Client.setCredentials({refresh_token: GMAIL_REFRESH_TOKEN});
 
 const fetchGoogleAccess = async () => {
   try {
