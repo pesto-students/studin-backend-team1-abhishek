@@ -1,4 +1,6 @@
-const transporter = require('../../Helpers/init_emailerOTP');
+const transporter = require('../../Helpers/init_emailerOTP_gmail');
+// const GmailTransporter = require('../../Helpers/init_emailerOTP_gmail');
+// const transporter =  GmailTransporter(); 
 const Otp = require('../../Models/Otp.model');
 const Sentry = require('@sentry/node');
 const User = require('../../Models/User.model');
@@ -17,7 +19,7 @@ const sendOTP = async (req, res) => {
     const otp = generateOTP();
     // send mail with defined transport object
     const mailOptions = {
-      from: 'Studin-admin@gmail.com',
+      from: 'Studin-Admin <studin.app@gmail.com>',
       to: req.body.useremail,
       subject: 'Otp for registration is: ',
       html: '<h3>OTP for account verification is </h3>' +
@@ -37,9 +39,7 @@ const sendOTP = async (req, res) => {
         } else {
           console.log('Message sent: %s', info.messageId);
           // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-          res.json({status: 200,
-            message: 'Mail sent', messageId: info.envelope.to[0],
-          });
+          res.json({ status: 200, message: 'Mail sent', messageId: info.envelope.to[0] });
           const userIdProper = await User.findOne({
             email: req.body.useremail
           })
