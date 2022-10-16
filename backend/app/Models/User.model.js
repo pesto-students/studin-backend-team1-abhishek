@@ -18,7 +18,6 @@ const UserSchema = new Schema({
   },
   age: {
     type: String,
-    // required: true,
   },
   schoolName: {
     type: String,
@@ -40,7 +39,6 @@ const UserSchema = new Schema({
     type: String,
     enum: ['Music', 'Art', 'Sports', 'Literature', 'History',
       'Science', 'Technology', 'Gardening', 'Entertainment'],
-    // default: [],
   },
   bio: {
     type: String,

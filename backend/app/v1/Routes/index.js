@@ -1,4 +1,4 @@
-const {requireAuth} = require('../../Middlewares/jwt_auth');
+const {requireAuth} = require('../../Middlewares/bkp_jwt_auth');
 const express = require('express');
 const router = new express.Router();
 

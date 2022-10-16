@@ -5,6 +5,7 @@ const sendOTP = require('./sendOTP.controller');
 const createUser = require('./createUser.controller');
 const getUser = require('./getUser.controller');
 const profileImage = require('./profileImage.controller');
+const verifyUserLogin = require('./verifyUserLogin.controller');
 
 module.exports = {
   login,
@@ -14,4 +15,5 @@ module.exports = {
   createUser,
   getUser,
   profileImage,
+  verifyUserLogin,
 };

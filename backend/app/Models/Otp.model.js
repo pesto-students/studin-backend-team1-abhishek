@@ -12,6 +12,10 @@ const OtpSchema = new Schema({
     // required: true, 
     // unique: true 
   // },
+  email: {
+    type: String,
+    required: true
+  },
   otp: {
     type: String,
     required: true,

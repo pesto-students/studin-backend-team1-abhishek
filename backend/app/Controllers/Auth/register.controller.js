@@ -1,22 +1,11 @@
-// const { authService } = require('../../Services/Auth.service');
 const cloudinary = require('../../Helpers/init_cloudinary');
-const createToken = require('../../Services/Auth.service');
+// const createToken = require('../../Services/Auth.service');
+const createToken = require('../../Middlewares/generateJWT');
 const Sentry = require('@sentry/node');
 const User = require('../../Models/User.model');
 
-const findUserByEmail = async (email) => {
-  const user = await User.findOne({
-    email,
-  });
-  if (!user) {
-    return false;
-  }
-  return user;
-};
-
 const register = async (req, res) => {
   try {
-    console.log("Entering register body");
     if (!req.body) {
       res.status(400).send('Insufficient data');
     }
@@ -30,7 +19,7 @@ const register = async (req, res) => {
       resource_type: 'auto',
       folder: 'studin/users-profile-images',
     });
-    // console.log(imageResult);
+
     const payload = {
       email: userId,
       firstName: firstName,
@@ -40,45 +29,27 @@ const register = async (req, res) => {
       // interests: interests,
       profilePhoto: imageResult.secure_url,
     };
-    console.log(payload);
-    console.log("Starting MongoDB insert");
-    // try {
-    const newUser = await User.create(payload);  
-    console.log(newUser);
-    console.log("Creating new token");
-    const signedJwt = await createToken({'email': userId});
-    console.log(signedJwt);
-    console.log("Sending jwt data");
+    const newUser = await User.create(payload);
+    const signedJwt = await createToken({'email': userId}, "access");
+    res
+      .cookie("accessToken", `Bearer ${signedJwt}`, {
+        httponly: true,
+        sameSite: "none",
+        secure: true,
+        maxAge: 1000 * 60 * 30,
+      })
+      .header("Access-Control-Allow-Credentials", true)
+      .header("Origin-Allow-Credentials", true)
+      .json({ data: signedJwt, status: 200});
+    console.log('cookie created successfully');
     res.json({status: 200, accessToken: signedJwt});
-    //   return
-    //   // return [true, newUser];
-    // } catch (error) {
-    //   console.log(error);
-    //   console.log("Error occured when creating user");
-    // }
   } catch (error) {
-      return res.status(400).send({
+      return res.send({
+        status: 400,
         error: error.message,
         message: 'Unable to create new user',
-        });
-    return [false, 'Unable to sign up, Please try again later', error];
+      });
   }
 };
-
-// const register = async (req, res) => {
-//   const {email, otp} = req.body;
-//   const isExisting = await findUserByEmail(email);
-//   if (isExisting) {
-//     return res.send('Already existing');
-//   }
-//   // create new user
-//   const newUser = await createUser(email, otp);
-//   if (!newUser[0]) {
-//     return res.status(400).send({
-//       message: 'Unable to create new user',
-//     });
-//   }
-//   res.send(newUser);
-// };
 
 module.exports = register;
