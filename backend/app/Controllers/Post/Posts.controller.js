@@ -94,20 +94,55 @@ const deletePost = async (req, res) => {
 
 const addLike = async (req, res) => {
   try {
-    const filter = {post_title: 'Killer Miller'};
-    const update = {$inc: {
-      likes: 1, // Increments by 1. Similarly, -2 will decrement by 2.
-    },
-    };
+    const {postId} = req.body;
+    currentUser = req.user._id;
 
-    const oldDocument = await Post.updateOne(filter, update);
+    const postData = await Post.findOne({_id : postId}).populate({path: 'likes'});
+    console.log("postData -->");
+    console.log(postData);
+
+    if (!postData.likes.includes(currentUser)){
+
+      const oldDocument = await Post.findOneAndUpdate(
+        { _id : postId }, 
+        { $push: { likes: currentUser  } },
+        function (error, success) {
+              if (error) {
+                  console.log(error);
+              } else {
+                  // console.log("Successfully liked the post!");
+                  // console.log(success);
+                  res.json({status: 200, message: "Successfully liked the post", data: success});
+              }
+        });
+        
+    } else {
+
+      res.json({status: 200, message: "Error! You have already liked this post"});
+      return;
+    }
+
+    // .populate({path: 'senderId', select: ['email', 'firstName', 'lastName', 'profilePhoto', 'schoolName']})
+    // .limit(5);
+
+    // const filter = { _id : postId };
+    // const update = {$inc: {
+    //   likes: 1, // Increments by 1. Similarly, -2 will decrement by 2.
+    // },
+    // };
+    // const oldDocument = await Post.updateOne(filter, update);
+    // res.status(200).json({status: 'OK', data: oldDocument});
+
     // console.log(oldDocument.n); // Number of documents matched
     // console.log(oldDocument.nModified); // Number of documents modified
-    res.status(200).json({status: 'OK', data: oldDocument});
+
+
+    
     // const updatedLikes = Post.updateOne()
-    return;
+    
   } catch (error) {
     console.log('Error occured when adding like');
+    Sentry.captureException(error);
     return;
   }
 };
