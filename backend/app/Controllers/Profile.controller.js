@@ -1,5 +1,5 @@
 // const { profileService } = require('../services/Profile.service');
-const { response } = require('..');
+
 const User = require('../Models/User.model')
 
 const getMyProfileSummary = async (req, res) => {
@@ -19,7 +19,7 @@ const getMyProfileSummary = async (req, res) => {
 	} catch (error) {
 		console.log(error)
 		console.log('Error occured when retrieving all posts')
-		returnnode
+		return
 	}
 };
 
