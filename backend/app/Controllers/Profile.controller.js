@@ -1,10 +1,11 @@
 // const { profileService } = require('../services/Profile.service');
+const { response } = require('..');
 const User = require('../Models/User.model')
 
-const getMyProfileSummary = async(req,res) => {
+const getMyProfileSummary = async (req, res) => {
 	try {
 		console.log("Inside profile summary")
-		const {body} = req;
+		const { body } = req;
 		const currentUser = await User.findOne({
 			email: body.email
 		})
@@ -12,17 +13,26 @@ const getMyProfileSummary = async(req,res) => {
 		// 	user_id: currentUser._id
 		// })
 		// console.log(`Current user --> ${currentUser}`)
-		res.status(200).send({status: "OK", data: currentUser})
+		res.status(200).send({ status: "OK", data: currentUser })
 		return
 		// res.status(200).send("Get all posts for current user");
 	} catch (error) {
 		console.log(error)
 		console.log('Error occured when retrieving all posts')
+		returnnode
+	}
+};
+
+const getMyProfileDetails = async (req, res) => {
+	try {
+		res.send("profile data")
+
+	} catch (error) {
 		return
 	}
 };
 
-const getMyProfileDetails = async(req,res) => {
+const updateMyProfileDetails = async (req, res) => {
 	try {
 		return
 	} catch (error) {
@@ -30,7 +40,7 @@ const getMyProfileDetails = async(req,res) => {
 	}
 };
 
-const updateMyProfileDetails = async(req,res) => {
+const getAllConnectionsDetails = async (req, res) => {
 	try {
 		return
 	} catch (error) {
@@ -38,15 +48,7 @@ const updateMyProfileDetails = async(req,res) => {
 	}
 };
 
-const getAllConnectionsDetails = async(req,res) => {
-	try {
-		return
-	} catch (error) {
-		return
-	}
-};
-
-const getConnectionDetails = async(req,res) => {
+const getConnectionDetails = async (req, res) => {
 	try {
 		return
 	} catch (error) {
@@ -55,9 +57,9 @@ const getConnectionDetails = async(req,res) => {
 };
 
 module.exports = {
-    getMyProfileSummary,
-    getMyProfileDetails,
-    updateMyProfileDetails,
-    getAllConnectionsDetails,
-    getConnectionDetails
+	getMyProfileSummary,
+	getMyProfileDetails,
+	updateMyProfileDetails,
+	getAllConnectionsDetails,
+	getConnectionDetails
 };
