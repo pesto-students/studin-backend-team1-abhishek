@@ -21,13 +21,16 @@ const getPost = async (req, res) => {
 const getAllPosts = async (req, res) => {
   try {
     const {body} = req;
-    const currentUser = await User.findOne({
-      email: body.email,
-    });
+    // const currentUser = await User.findOne({
+    //   email: body.email,
+    // });
+    const currentUserId = req.user._id;
+    console.log('currentUser',currentUserId);
     const allPosts = await Post.find({
-      user_id: currentUser._id,
-    });
-    // console.log(allPosts)
+      userId: currentUserId,
+    })
+    .populate({path: 'userId', select: ['profilePhoto']});
+    console.log(allPosts)
     res.status(200).send({status: 'OK', data: allPosts});
     return;
     // res.status(200).send("Get all posts for current user");
@@ -55,11 +58,12 @@ const createPost = async (req, res) => {
     // console.log(`image result --> ${imageResult}`)
     // console.log(imageResult);
     const currentUser = await User.findOne({
-      email: 'test@gmail.com',
+      // email: 'test@gmail.com',
+      _id: req.user._id
     });
     // console.log(currentUser)
     const newPost = {
-      userId: currentUser._id,
+      userId: req.user._id,
       // title: body.title ,
       content: body.content,
       imageUrl: imageResult.secure_url,
@@ -68,10 +72,10 @@ const createPost = async (req, res) => {
     };
     const createdPost = await Post.create(newPost);
     console.log(createdPost);
-    res.status(201).json({status: 'OK', data: createdPost});
+    res.json({status: 200, data: createdPost});
     return;
   } catch (error) {
-    Sentry.captureException(e);
+    Sentry.captureException(error);
     console.log('Error occured when creating post');
     console.log(error);
     return;
@@ -94,20 +98,55 @@ const deletePost = async (req, res) => {
 
 const addLike = async (req, res) => {
   try {
-    const filter = {post_title: 'Killer Miller'};
-    const update = {$inc: {
-      likes: 1, // Increments by 1. Similarly, -2 will decrement by 2.
-    },
-    };
+    const {postId} = req.body;
+    currentUser = req.user._id;
 
-    const oldDocument = await Post.updateOne(filter, update);
+    const postData = await Post.findOne({_id : postId}).populate({path: 'likes'});
+    console.log("postData -->");
+    console.log(postData);
+
+    if (!postData.likes.includes(currentUser)){
+
+      const oldDocument = await Post.findOneAndUpdate(
+        { _id : postId }, 
+        { $push: { likes: currentUser  } },
+        function (error, success) {
+              if (error) {
+                  console.log(error);
+              } else {
+                  // console.log("Successfully liked the post!");
+                  // console.log(success);
+                  res.json({status: 200, message: "Successfully liked the post", data: success});
+              }
+        });
+        
+    } else {
+
+      res.json({status: 200, message: "Error! You have already liked this post"});
+      return;
+    }
+
+    // .populate({path: 'senderId', select: ['email', 'firstName', 'lastName', 'profilePhoto', 'schoolName']})
+    // .limit(5);
+
+    // const filter = { _id : postId };
+    // const update = {$inc: {
+    //   likes: 1, // Increments by 1. Similarly, -2 will decrement by 2.
+    // },
+    // };
+    // const oldDocument = await Post.updateOne(filter, update);
+    // res.status(200).json({status: 'OK', data: oldDocument});
+
     // console.log(oldDocument.n); // Number of documents matched
     // console.log(oldDocument.nModified); // Number of documents modified
-    res.status(200).json({status: 'OK', data: oldDocument});
+
+
+    
     // const updatedLikes = Post.updateOne()
-    return;
+    
   } catch (error) {
     console.log('Error occured when adding like');
+    Sentry.captureException(error);
     return;
   }
 };

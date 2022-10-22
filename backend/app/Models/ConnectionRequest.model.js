@@ -4,16 +4,16 @@ const Schema = mongoose.Schema;
 
 const ConnectionRequestSchema = new Schema({
   senderId: {
-    type: String,
-    required: true
-    // type: Schema.Types.ObjectId,
-    // ref: 'User',
+    // type: String,
+    // required: true
+    type: Schema.Types.ObjectId,
+    ref: 'User',
   },
   receiverId: {
-    type: String,
-    required: true
-    // type: Schema.Types.ObjectId,
-    // ref: 'User',
+    // type: String,
+    // required: true
+    type: Schema.Types.ObjectId,
+    ref: 'User',
   },
   isAccepted: {
     type: Boolean,

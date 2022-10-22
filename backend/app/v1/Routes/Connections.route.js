@@ -2,8 +2,10 @@ const controllers = require('../../Controllers/Connections');
 const express = require('express');
 const router = new express.Router();
 
-router.get('/allUsers', controllers.getAllUsers)
-router.get('/top5Users', controllers.getTop5Users)
+router.get('/allUsers', controllers.getAllUsers);
+router.get('/top5Users', controllers.getTop5Users);
+router.get('/myConnRequests', controllers.getMyConnRequests);
+router.post('/acceptConnection', controllers.acceptConnectionRequest);
 // router.get('/allConnections', controllers.getAllConnections)
 // router.get('/top5Connections', controllers.getTop5Connections)
 
