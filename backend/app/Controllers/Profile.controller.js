@@ -1,5 +1,3 @@
-// const { profileService } = require('../services/Profile.service');
-
 const User = require('../Models/User.model')
 
 const getMyProfileSummary = async (req, res) => {
