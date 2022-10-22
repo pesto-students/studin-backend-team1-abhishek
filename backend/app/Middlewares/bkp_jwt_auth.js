@@ -19,22 +19,22 @@ const requireAuth = async (req, res, next) => {
         ACCESS_TOKEN_SECRET_KEY,
         async (err, decodedToken) => {
           try {
-            console.log("Step 1");
+            // console.log("Step 1");
             if (err) res.json({message: 'invalid token', status: 401});
             const {payload} = decodedToken;
             const user = await User.findOne({email: payload.email});
-            console.log("Step 2");
+            // console.log("Step 2");
             if(!user){
               Sentry.captureMessage('Invalid user details', 'warning');
               res.json({message: 'Invalid user details', status: 400});
             }
-            console.log("Step 3");
+            // console.log("Step 3");
             user.accessToken = accessToken;
             // user.refreshToken = refreshToken;
             req.user = user;
-            console.log("Step 4");
-            console.log("Displaying req.user at middleware");
-            console.log(req.user);
+            // console.log("Step 4");
+            // console.log("Displaying req.user at middleware");
+            // console.log(req.user);
             next();
           } catch (err) {
             Sentry.captureException(err);

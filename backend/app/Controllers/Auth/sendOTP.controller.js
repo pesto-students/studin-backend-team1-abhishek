@@ -25,41 +25,49 @@ const sendOTP = async (req, res) => {
         otp + '</h1>', // html body
     };
 
-    const existingOtp = await Otp.findOne({
-      email: req.body.useremail 
-      // userId: userIdProper._id,
-    })
-    if (!existingOtp) {
-      await transporter.sendMail(mailOptions, async (error, info) => {
-        console.log('here');
-        if (error) {
-          return console.log(error);
-        } else {
-          console.log('Message sent: %s', info.messageId);
-          // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-          res.json({status: 200,
-            message: 'Mail sent', messageId: info.envelope.to[0],
-          });
-          const userIdProper = await User.findOne({
-            email: req.body.useremail
-          })
-          console.log('Proper user id -->', userIdProper);
-          const otpOptions  = {
-            // userId: userIdProper ? userIdProper._id : '',
-            email: info.envelope.to[0],
-            otp: otp,}
-          if (userIdProper){
-            otpOptions.userId = userIdProper._id
-          }
-          const otpRes = await Otp.create(otpOptions);
-          console.log(`OTP Res --> ${otpRes}`);
-          return;
+    // const existingOtp = await Otp.findOne({
+    //   email: req.body.useremail 
+    //   // userId: userIdProper._id,
+    // })
+    // if (!existingOtp) {
+    await transporter.sendMail(mailOptions, async (error, info) => {
+      console.log('here');
+      if (error) {
+        return console.log(error);
+      } else {
+        console.log('Message sent: %s', info.messageId);
+        // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+        res.json({
+          status: 200,
+          message: 'Mail sent', messageId: info.envelope.to[0],
+        });
+        const userIdProper = await User.findOne({
+          email: req.body.useremail
+        })
+        // console.log('Proper user id -->', userIdProper);
+        const filter = {
+          email: info.envelope.to[0]
         }
-      });
-    } else {
-      res.json({status: 200, message: 'Mail already sent, Please check your inbox!'});
-      return;
-    }
+        const otpOptions  = {
+          // userId: userIdProper ? userIdProper._id : '',
+          email: info.envelope.to[0],
+          otp: otp
+        }
+        if (userIdProper){
+          otpOptions.userId = userIdProper._id
+        }
+        const otpRes = await Otp.findOneAndUpdate(filter, otpOptions, {
+          new: true, 
+          upsert: true
+        });
+        console.log(`OTP Res --> ${otpRes}`);
+        return;
+      }
+    });
+    // } else {
+    //   res.json({status: 200, message: 'Mail already sent, Please check your inbox!'});
+    //   return;
+    // }
   } catch (error) {
     console.log(error)
     Sentry.captureException(error);
