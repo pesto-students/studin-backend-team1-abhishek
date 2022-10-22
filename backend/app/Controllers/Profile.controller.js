@@ -25,10 +25,11 @@ const getMyProfileSummary = async (req, res) => {
 
 const getMyProfileDetails = async (req, res) => {
 	try {
-		res.send("profile data")
+		res.json(req.user)
 
 	} catch (error) {
-		return
+		console.log("catch")
+		// console.log(error)
 	}
 };
 
