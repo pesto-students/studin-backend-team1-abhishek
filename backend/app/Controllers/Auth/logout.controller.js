@@ -7,11 +7,12 @@ const logout = async (req, res) => {
         // await req.session.destroy();
         // await res.clearCookie("connect.sid");
         await res.clearCookie("accessToken");
+        console.log("Logout initiated");
         // res.clearCookie("refreshToken");
         res.json({ message: "User Logged Out Successfully" , status: 200});
         return;
       } else {
-        return res.json({ message: "Please login first!", status: 400});
+        return res.json({ message: "Please login first!", status: 200});
       }
   } catch (error) {
     Sentry.captureException('Error occured during logout');

@@ -21,13 +21,16 @@ const getPost = async (req, res) => {
 const getAllPosts = async (req, res) => {
   try {
     const {body} = req;
-    const currentUser = await User.findOne({
-      email: body.email,
-    });
+    // const currentUser = await User.findOne({
+    //   email: body.email,
+    // });
+    const currentUserId = req.user._id;
+    console.log('currentUser',currentUserId);
     const allPosts = await Post.find({
-      user_id: currentUser._id,
-    });
-    // console.log(allPosts)
+      userId: currentUserId,
+    })
+    .populate({path: 'userId', select: ['profilePhoto']});
+    console.log(allPosts)
     res.status(200).send({status: 'OK', data: allPosts});
     return;
     // res.status(200).send("Get all posts for current user");
@@ -55,11 +58,12 @@ const createPost = async (req, res) => {
     // console.log(`image result --> ${imageResult}`)
     // console.log(imageResult);
     const currentUser = await User.findOne({
-      email: 'test@gmail.com',
+      // email: 'test@gmail.com',
+      _id: req.user._id
     });
     // console.log(currentUser)
     const newPost = {
-      userId: currentUser._id,
+      userId: req.user._id,
       // title: body.title ,
       content: body.content,
       imageUrl: imageResult.secure_url,
@@ -68,10 +72,10 @@ const createPost = async (req, res) => {
     };
     const createdPost = await Post.create(newPost);
     console.log(createdPost);
-    res.status(201).json({status: 'OK', data: createdPost});
+    res.json({status: 200, data: createdPost});
     return;
   } catch (error) {
-    Sentry.captureException(e);
+    Sentry.captureException(error);
     console.log('Error occured when creating post');
     console.log(error);
     return;

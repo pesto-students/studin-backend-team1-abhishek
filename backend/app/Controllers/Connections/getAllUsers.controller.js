@@ -8,7 +8,7 @@ const getAllUsers = async (req, res) => {
         const allUsers = await User.find({
             // _id: currentUserId
         });
-        console.log('allUsers data -->', allUsers);
+        // console.log('allUsers data -->', allUsers);
         // const updatedUserConnections = await User.findOne({ _id: currentUserId })
         //     .populate({path: 'connections'})
 
