@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "build": "npm install & npm run dev",
+    "build": "npm install & node server.js",
     "format:check": "prettier --check",
     "lint:check": "eslint .",
     "lint:fix": "eslint --fix ."
