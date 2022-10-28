@@ -31,7 +31,7 @@ const register = async (req, res) => {
     };
     const newUser = await User.create(payload);
     const signedJwt = await createToken({'email': userId}, "access");
-    res
+    return res
       .cookie("accessToken", `Bearer ${signedJwt}`, {
         httponly: true,
         sameSite: "none",
@@ -40,9 +40,8 @@ const register = async (req, res) => {
       })
       .header("Access-Control-Allow-Credentials", true)
       .header("Origin-Allow-Credentials", true)
-      .json({ data: signedJwt, status: 200});
+      .json({status: 200, accessToken: signedJwt});
     console.log('cookie created successfully');
-    res.json({status: 200, accessToken: signedJwt});
   } catch (error) {
       return res.send({
         status: 400,

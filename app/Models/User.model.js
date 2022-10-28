@@ -51,6 +51,12 @@ const UserSchema = new Schema({
     get: (profilePhoto) => (profilePhoto ?
       `${profilePhoto}` : profilePhoto),
   },
+  coverPhoto: {
+    type: String,
+    default: '',
+    get: (coverPhoto) => (coverPhoto ?
+      `${coverPhoto}` : coverPhoto),
+  },
   posts: [{
     type: MyObjectId,
     ref: 'Post',
