@@ -21,7 +21,8 @@ const app = express();
 // middlewares
 app.use(express.static('public'));
 const issue2options = {
-  origin: 'http://localhost:3000',
+  // origin: 'http://localhost:3000',
+  origin: 'https://reliable-parfait-d19e25.netlify.app',
   // methods: ["POST", "DELETE"],
   credentials: true,
   // maxAge: 3600
