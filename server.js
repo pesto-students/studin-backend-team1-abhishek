@@ -1,7 +1,7 @@
 const app = require('./app');
 
-const port = process.env.port || 4000;
+const port = process.env.port || 3001;
 
-app.listen(port, ()=>{
+app.listen(port, '0.0.0.0', ()=>{
   console.log(`StudIn API is listening on port ${port}`);
 });
