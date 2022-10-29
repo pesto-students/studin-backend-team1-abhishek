@@ -9,7 +9,6 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "npm install",
-    "postinstall": "node server.js",
     "format:check": "prettier --check",
     "lint:check": "eslint .",
     "lint:fix": "eslint --fix ."
