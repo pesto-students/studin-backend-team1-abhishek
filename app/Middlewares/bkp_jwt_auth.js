@@ -1,16 +1,11 @@
-
-
 const jwt = require('jsonwebtoken');
 const Sentry = require("@sentry/node");
 const User = require('../Models/User.model');
 const {ACCESS_TOKEN_SECRET_KEY} = process.env;
 
-
 const requireAuth = async (req, res, next) => {
 
   try {
-    // console.log(req.cookies);
-    // console.log(req.user);
     if (req.cookies.accessToken) {
       const accessToken = req.cookies.accessToken.split(' ')[1];
       // const refreshToken = req.cookies.refreshToken.split(' ')[1];
@@ -28,6 +23,7 @@ const requireAuth = async (req, res, next) => {
               Sentry.captureMessage('Invalid user details', 'warning');
               res.json({message: 'Invalid user details', status: 400});
             }
+
             // console.log("Step 3");
             user.accessToken = accessToken;
             // user.refreshToken = refreshToken;
@@ -35,6 +31,7 @@ const requireAuth = async (req, res, next) => {
             // console.log("Step 4");
             // console.log("Displaying req.user at middleware");
             // console.log(req.user);
+
             next();
           } catch (err) {
             Sentry.captureException(err);
