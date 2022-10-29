@@ -24,6 +24,8 @@ const issue2options = {
   // origin: 'http://localhost:3000',
   origin: 'https://reliable-parfait-d19e25.netlify.app',
   // methods: ["POST", "DELETE"],
+  methods: ['POST', 'GET', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
   // maxAge: 3600
 };
