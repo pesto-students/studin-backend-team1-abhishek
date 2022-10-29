@@ -10,7 +10,7 @@
     "dev": "nodemon server.js",
     "start": "webpack-dev-server --mode development --hot --open --port $PORT",
     "build": "npm i -dev && webpack --mode production",
-    "heroku-postbuild": "npm build",
+    "heroku-postbuild": "npm run build",
     "format:check": "prettier --check",
     "lint:check": "eslint .",
     "lint:fix": "eslint --fix ."
