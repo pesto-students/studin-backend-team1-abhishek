@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "nodemon server.js",
-    "start": "webpack-dev-server --mode development --hot --open --port $PORT",
+    "start": "node server.js",
     "build": "npm i -dev && webpack --mode production",
     "heroku-postbuild": "npm run start",
     "format:check": "prettier --check",
