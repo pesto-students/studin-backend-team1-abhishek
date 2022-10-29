@@ -22,11 +22,12 @@ const app = express();
 app.use(express.static('public'));
 const issue2options = {
   // origin: 'http://localhost:3000',
-  origin: 'https://reliable-parfait-d19e25.netlify.app',
+  // origin: 'https://reliable-parfait-d19e25.netlify.app',
+  origin: '*',
   // methods: ["POST", "DELETE"],
-  methods: [ "HEAD", "PUT", "PATCH", "POST", "GET", "DELETE", "OPTIONS" ],
-  credentials: true,
-  allowedHeaders: ['Content-type','Authorization','Origin','Access-Control-Allow-Origin','Accept','Options','X-Requested-With'],
+  // methods: [ "HEAD", "PUT", "PATCH", "POST", "GET", "DELETE", "OPTIONS" ],
+  // credentials: true,
+  // allowedHeaders: ['Content-type','Authorization','Origin','Access-Control-Allow-Origin','Accept','Options','X-Requested-With'],
   // maxAge: 3600
 };
 app.use(upload({
