@@ -21,16 +21,15 @@ const app = express();
 // middlewares
 app.use(express.static('public'));
 const issue2options = {
-      credentials: true,
+      // credentials: true,
       // origin: ['https://reliable-parfait-d19e25.netlify.app', "http://localhost:3000"],
-      origin: '*',
+      // origin: '*',
       // allowedHeaders: [
       //   "Content-Type",
       //   "Authorization",
       //   "Access-Control-Allow-Credentials",
       //   "Access-Control-Allow-Origin",
       // ],
-      
 }
 // "x-csrf-token",
 // ],
@@ -51,7 +50,7 @@ app.use(upload({
   useTempFiles: true,
   limits: {fileSize: 50 * 2024 * 1024},
 }));
-app.use(cors(issue2options));
+app.use(cors());
 app.use(express.json({limit: '25mb'}));
 // app.use(express.urlencoded({limit: '25mb'}));
 app.use(cookieParser());
