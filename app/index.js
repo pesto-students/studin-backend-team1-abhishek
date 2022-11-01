@@ -21,15 +21,15 @@ const app = express();
 // middlewares
 app.use(express.static('public'));
 const issue2options = {
-      // credentials: true,
-      // origin: ['https://reliable-parfait-d19e25.netlify.app', "http://localhost:3000"],
+      credentials: true,
+      origin: ['https://reliable-parfait-d19e25.netlify.app', "http://localhost:3000"],
       // origin: '*',
-      // allowedHeaders: [
-      //   "Content-Type",
-      //   "Authorization",
-      //   "Access-Control-Allow-Credentials",
-      //   "Access-Control-Allow-Origin",
-      // ],
+      allowedHeaders: [
+        "Content-Type",
+        "Authorization",
+        "Access-Control-Allow-Credentials",
+        "Access-Control-Allow-Origin",
+      ],
 }
 // "x-csrf-token",
 // ],
