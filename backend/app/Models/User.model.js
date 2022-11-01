@@ -37,8 +37,8 @@ const UserSchema = new Schema({
   },
   interests: {
     type: String,
-    enum: ['Music', 'Art', 'Sports', 'Literature', 'History',
-      'Science', 'Technology', 'Gardening', 'Entertainment'],
+    // enum: ['Music', 'Art', 'Sports', 'Literature', 'History',
+    //   'Science', 'Technology', 'Gardening', 'Entertainment'],
   },
   bio: {
     type: String,
@@ -50,6 +50,12 @@ const UserSchema = new Schema({
     default: '',
     get: (profilePhoto) => (profilePhoto ?
       `${profilePhoto}` : profilePhoto),
+  },
+  coverPhoto: {
+    type: String,
+    default: '',
+    get: (coverPhoto) => (coverPhoto ?
+      `${coverPhoto}` : coverPhoto),
   },
   posts: [{
     type: MyObjectId,

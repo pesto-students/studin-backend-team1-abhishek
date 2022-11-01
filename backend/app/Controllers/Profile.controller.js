@@ -1,4 +1,5 @@
-const User = require('../Models/User.model')
+const User = require('../Models/User.model');
+const cloudinary = require('../Helpers/init_cloudinary');
 
 const getMyProfileSummary = async (req, res) => {
 	try {
@@ -30,42 +31,50 @@ const getMyProfileDetails = async (req, res) => {
 };
 
 const updateMyProfileDetails = async (req, res) => {
+  console.log("update data details");
   try {
-    if (!req.body) {
-      res.status(400).send('Insufficient data');
-  }
-
+    
   const {
-      userId, firstName, lastName, schoolName, collegeName, interests,
+     firstName, lastName, schoolName, collegeName, interests,
   } = req.body;
-  const { profilePhoto, coverPhoto } = req.files;
-  console.log(req.user)
 
-  const imageResult = await cloudinary.uploader.upload(profilePhoto.tempFilePath, {
+   if(req.files){
+  var file = req.files.profilePhoto;
+  var file1=req.files.coverPhoto;
+}
+
+  const payload = {
+    firstName: firstName,
+    lastName: lastName,
+    schoolName: schoolName,
+    collegeName: collegeName,
+    interests: interests,
+    // profilePhoto: imageResult.secure_url,
+    // coverPhoto: imageResult2.secure_url,
+};
+console.log(payload);
+if(file !==undefined){
+  var imageResult = await cloudinary.uploader.upload(file.tempFilePath, {
       public_id: `${Date.now()}`,
       resource_type: 'auto',
       folder: 'studin/users-profile-images',
   });
-
-  const imageResult2 = await cloudinary.uploader.upload(coverPhoto.tempFilePath, {
+  payload.profilePhoto=imageResult.secure_url
+}
+if(file1 !== undefined){
+  var imageResult2 = await cloudinary.uploader.upload(file1.tempFilePath, {
       public_id: `${Date.now()}`,
       resource_type: 'auto',
       folder: 'studin/users-cover-images',
   });
-
-  const payload = {
-      email: userId,
-      firstName: firstName,
-      lastName: lastName,
-      schoolName: schoolName,
-      collegeName: collegeName,
-      interests: interests,
-      profilePhoto: imageResult.secure_url,
-      coverPhoto: imageResult2.secure_url,
-  };
+  payload.coverPhoto=imageResult2.secure_url
+}
+console.log(imageResult2);
   const updateuser = await User.findByIdAndUpdate(req.user._id, payload, {
       new: true
   });
+  console.log(updateuser)
+  res.status(200).json(updateuser);
   } catch (error) {
     return;
   }
