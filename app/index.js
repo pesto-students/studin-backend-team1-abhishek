@@ -50,7 +50,7 @@ app.use(upload({
   useTempFiles: true,
   limits: {fileSize: 50 * 2024 * 1024},
 }));
-app.use(cors());
+app.use(cors(issue2options));
 app.use(express.json({limit: '25mb'}));
 // app.use(express.urlencoded({limit: '25mb'}));
 app.use(cookieParser());
