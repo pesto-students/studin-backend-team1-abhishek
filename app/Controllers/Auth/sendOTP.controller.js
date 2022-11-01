@@ -1,4 +1,4 @@
-const transporter = require('../../Helpers/init_emailerOTP');
+const transporter = require('../../Helpers/init_emailerOTP_gmail');
 const Otp = require('../../Models/Otp.model');
 const Sentry = require('@sentry/node');
 const User = require('../../Models/User.model');
@@ -31,11 +31,11 @@ const sendOTP = async (req, res) => {
     // })
     // if (!existingOtp) {
     await transporter.sendMail(mailOptions, async (error, info) => {
-      console.log('here');
+      // console.log('here');
       if (error) {
         return console.log(error);
       } else {
-        console.log('Message sent: %s', info.messageId);
+        // console.log('Message sent: %s', info.messageId);
         // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
         res.json({
           status: 200,

@@ -2,7 +2,6 @@
 const cloudinary = require('../../Helpers/init_cloudinary');
 const Sentry = require('@sentry/node');
 const Post = require('../../Models/Posts.model');
-const User = require('../../Models/User.model');
 // const baseUrl = process.env.NEXT_STATIC_BASE_URL || 'http://localhost:9000';
 
 const getPost = async (req, res) => {
@@ -25,12 +24,12 @@ const getAllPosts = async (req, res) => {
     //   email: body.email,
     // });
     const currentUserId = req.user._id;
-    console.log('currentUser',currentUserId);
+    // console.log('currentUser',currentUserId);
     const allPosts = await Post.find({
       userId: currentUserId,
     })
     .populate({path: 'userId', select: ['profilePhoto']});
-    console.log(allPosts)
+    // console.log(allPosts)
     res.status(200).send({status: 'OK', data: allPosts});
     return;
     // res.status(200).send("Get all posts for current user");
@@ -43,36 +42,42 @@ const getAllPosts = async (req, res) => {
 };
 const createPost = async (req, res) => {
   try {
-    const {body} = req;
-    console.log(body);
+    const { body } = req;
     // if (!body.post_title || !body.post || !body.likes || !body.comments){
     // return;
     // }
+    console.log("req.files-->");
+    let imageResult = '';
+    if (req.files){
+      const file = req.files.image;
+      console.log(file);
+      if (file.size < 5000000){
+        imageResult = await cloudinary.uploader.upload(file.tempFilePath, {
+          public_id: `${Date.now()}`,
+          resource_type: 'auto',
+          folder: 'studin/posts',
+        });
+      } else {
+        console.log("File size greater than 5mb");
+        res.json({status: 400, message: "Failed during file upload. File might be too large!"});
+        return;
+      }
+    }
 
-    const file = req.files.image;
-    const imageResult = await cloudinary.uploader.upload(file.tempFilePath, {
-      public_id: `${Date.now()}`,
-      resource_type: 'auto',
-      folder: 'studin/posts',
-    });
-    // console.log(`image result --> ${imageResult}`)
-    // console.log(imageResult);
-    const currentUser = await User.findOne({
-      // email: 'test@gmail.com',
-      _id: req.user._id
-    });
-    // console.log(currentUser)
     const newPost = {
       userId: req.user._id,
-      // title: body.title ,
       content: body.content,
-      imageUrl: imageResult.secure_url,
-      // likes: [],
-      // comments: []
+      imageUrl: imageResult ? imageResult.secure_url : '' ,
     };
-    const createdPost = await Post.create(newPost);
-    console.log(createdPost);
-    res.json({status: 200, data: createdPost});
+
+    if (!req.files || req.files && req.files.image.size < 5000000){
+      console.log("entering here - why?");
+      const createdPost = await Post.create(newPost);
+      console.log(createdPost);
+      res.json({status: 200, data: createdPost});
+      return;
+    }
+    // res.json({status: 400, message: "Failed during file upload. File might be too large!"});
     return;
   } catch (error) {
     Sentry.captureException(error);
@@ -102,8 +107,8 @@ const addLike = async (req, res) => {
     currentUser = req.user._id;
 
     const postData = await Post.findOne({_id : postId}).populate({path: 'likes'});
-    console.log("postData -->");
-    console.log(postData);
+    // console.log("postData -->");
+    // console.log(postData);
 
     if (!postData.likes.includes(currentUser)){
 
@@ -114,8 +119,6 @@ const addLike = async (req, res) => {
               if (error) {
                   console.log(error);
               } else {
-                  // console.log("Successfully liked the post!");
-                  // console.log(success);
                   res.json({status: 200, message: "Successfully liked the post", data: success});
               }
         });
@@ -125,53 +128,50 @@ const addLike = async (req, res) => {
       res.json({status: 200, message: "Error! You have already liked this post"});
       return;
     }
-
-    // .populate({path: 'senderId', select: ['email', 'firstName', 'lastName', 'profilePhoto', 'schoolName']})
-    // .limit(5);
-
-    // const filter = { _id : postId };
-    // const update = {$inc: {
-    //   likes: 1, // Increments by 1. Similarly, -2 will decrement by 2.
-    // },
-    // };
-    // const oldDocument = await Post.updateOne(filter, update);
-    // res.status(200).json({status: 'OK', data: oldDocument});
-
-    // console.log(oldDocument.n); // Number of documents matched
-    // console.log(oldDocument.nModified); // Number of documents modified
-
-
-    
-    // const updatedLikes = Post.updateOne()
-    
   } catch (error) {
     console.log('Error occured when adding like');
     Sentry.captureException(error);
     return;
   }
 };
-const removeLike = async (req, res) => {
+const disLike = async (req, res) => {
   try {
-    const filter = {post_title: 'Killer Miller'};
-    const update = {$inc: {
-      likes: -1, // Increments by 1. Similarly, -2 will decrement by 2.
-    },
-    };
+    const {postId} = req.body;
+    currentUser = req.user._id;
 
-    const oldDocument = await Post.updateOne(filter, update);
-    // console.log(oldDocument.n); // Number of documents matched
-    // console.log(oldDocument.nModified); // Number of documents modified
-    res.status(200).json({status: 'OK', data: oldDocument});
-    return;
+    const postData = await Post.findOne({_id : postId}).populate({path: 'likes'});
+    // console.log("postData -->");
+    // console.log(postData);
+
+    if (!postData.likes.includes(currentUser)){
+
+      const oldDocument = await Post.findOneAndUpdate(
+        { _id : postId }, 
+        { $pull: { likes: currentUser  } },
+        function (error, success) {
+              if (error) {
+                  console.log(error);
+              } else {
+                  res.json({status: 200, message: "Successfully dis-liked the post", data: success});
+              }
+        });
+        
+    } else {
+
+      res.json({status: 200, message: "Error! You have dis-liked this post"});
+      return;
+    }
   } catch (error) {
     console.log('Error occured when removing like');
+    Sentry.captureException(error);
     return;
   }
 };
+
 const addComment = async (req, res) => {
   try {
     const {id} = req.params;
-    console.log(id);
+    // console.log(id);
     const {author, text} = req.body;
     const oldDocument = await Post.updateOne(
         // { _id: id },
@@ -201,7 +201,7 @@ module.exports = {
   createPost,
   deletePost,
   addLike,
-  removeLike,
+  disLike,
   addComment,
   removeComment,
 };

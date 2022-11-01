@@ -22,14 +22,19 @@ const app = express();
 app.use(express.static('public'));
 const issue2options = {
       credentials: true,
-      allowedHeaders: [
-        "Content-Type",
-        "Authorization",
-        "Access-Control-Allow-Credentials",
-        "Access-Control-Allow-Origin",
-      ],
+      // allowedHeaders: [
+      //   "Content-Type",
+      //   "Authorization",
+      //   "Access-Control-Allow-Credentials",
+      //   "Access-Control-Allow-Origin",
+      // ],
       origin: ['https://reliable-parfait-d19e25.netlify.app', "http://localhost:3000"],
 }
+// "x-csrf-token",
+// ],
+// origin: ['https://reliable-parfait-d19e25.netlify.app', "http://localhost:3000"],
+// origin: ["https://reliable-parfait-d19e25.netlify.app", "http://localhost:3000"],
+// exposedHeaders: ['*', 'Authorization' ],
 // const issue2options = {
   // origin: 'http://localhost:3000',
   // origin: 'https://reliable-parfait-d19e25.netlify.app',

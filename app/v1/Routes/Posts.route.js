@@ -11,7 +11,7 @@ router.delete('/:postId', controllers.deletePost);
 // Likes and comments
 // router.post('/like/:postId', controllers.addLike);
 router.post('/addLike', controllers.addLike);
-// router.post('/dislike', controllers.dislike);
+router.post('/disLike', controllers.disLike);
 // router.post('/unLike/:postId', controllers.removeLike);
 router.post('/comment/:postId', controllers.addComment);
 router.post('/unComment/:postId/:commentId', controllers.removeComment);

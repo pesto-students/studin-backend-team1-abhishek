@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const Sentry = require('@sentry/node');
+const User = require('../../Models/User.model');
 const ACCESS_TOKEN_SECRET_KEY = process.env.ACCESS_TOKEN_SECRET_KEY;
 
 const verifyUserLogin = async(req, res) => {
@@ -24,8 +25,11 @@ const verifyUserLogin = async(req, res) => {
                         Sentry.captureMessage('Invalid user details', 'warning');
                         res.json({message: 'Invalid user details', status: 400});
                     }
+                    const currentUser = await User.findOne({
+                        email: payload.email
+                    });
 
-                    res.json({ message: 'Verified logged in user is active', email: payload.email, status: 200})
+                    res.json({ message: 'Verified logged in user is active', email: payload.email, userId: currentUser._id, status: 200})
                     return;
                 } catch (err) {
                     Sentry.captureException(err);

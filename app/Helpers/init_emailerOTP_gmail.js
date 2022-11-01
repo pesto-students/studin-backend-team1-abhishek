@@ -11,7 +11,7 @@ const fetchGoogleAccess = async () => {
   try {
 
     let accessToken = await oAuth2Client.getAccessToken();
-    console.log('access token is ready');
+    // console.log('access token is ready');
     return accessToken;
 
   } catch (error) {
