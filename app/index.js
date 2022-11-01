@@ -20,10 +20,26 @@ const app = express();
 
 // middlewares
 app.use(express.static('public'));
+var corsPreflightHandler = function(req, res, next) {
+  // res.header('Access-Control-Allow-Origin', '*');
+  // res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  // res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    
+  // intercept OPTIONS method
+  if ('OPTIONS' == req.method) {
+    res.send(200);
+  }
+  else {
+    next();
+  }
+};
+app.use(corsPreflightHandler);
 const issue2options = {
       credentials: true,
+      // preflightContinue: true,
       origin: ['https://reliable-parfait-d19e25.netlify.app', "http://localhost:3000"],
       // origin: '*',
+      // methods: [ "HEAD", "PUT", "PATCH", "POST", "GET", "DELETE", "OPTIONS" ],
       allowedHeaders: [
         "Content-Type",
         "Authorization",
