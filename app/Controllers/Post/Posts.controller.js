@@ -35,9 +35,9 @@ const getAllPosts = async (req, res) => {
       res.send({status: 200, data: allPosts});
     } else {
       //Random posts for user with no posts created
-      const allRandomPosts = await Post.find().populate({
+      const allRandomPosts = await Post.find().limit(5).populate({
         path: 'userId', select: ['profilePhoto']
-      }).limit(5);
+      });
 
       res.send({status: 200, data: allRandomPosts});
     }
