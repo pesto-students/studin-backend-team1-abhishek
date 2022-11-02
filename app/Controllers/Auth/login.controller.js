@@ -41,6 +41,18 @@ const login = async (req, res) => {
           .json({ data: cleanUser });
       } else {
           const signedJwt = createToken({'email': email}, "access");
+          const userData = await User.findOne({
+            email: email,
+          });
+          console.log('user data before sending login info --> ', userData);
+          let responsePayload = {
+            userEmail: email,
+            accessToken: signedJwt,
+            status: 201 
+          }
+          if (userData){
+            responsePayload['userId'] = userData._id;
+          }
           res
             .cookie("accessToken", `Bearer ${signedJwt}`, {
               httponly: true,
@@ -50,7 +62,7 @@ const login = async (req, res) => {
             })
             .header("Access-Control-Allow-Credentials", true)
             .header("Origin-Allow-Credentials", true)
-            .json({ userEmail: email, accessToken: signedJwt, status: 201 });
+            .json(responsePayload);
           console.log('cookie created successfully');
         }
     }
