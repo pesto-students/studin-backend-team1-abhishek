@@ -5,7 +5,7 @@ const Sentry = require('@sentry/node');
 
 const login = async (req, res) => {
   try {
-    console.log(req.body);
+    // console.log(req.body);
     const {email, otp} = req.body;
     const existingUser = await User.findOne({
       email: email,
@@ -50,7 +50,7 @@ const login = async (req, res) => {
             })
             .header("Access-Control-Allow-Credentials", true)
             .header("Origin-Allow-Credentials", true)
-            .json({ data: signedJwt, status: 201 });
+            .json({ userEmail: email, accessToken: signedJwt, status: 201 });
           console.log('cookie created successfully');
         }
     }
