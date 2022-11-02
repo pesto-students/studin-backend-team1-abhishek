@@ -2,6 +2,7 @@
 const cloudinary = require('../../Helpers/init_cloudinary');
 const Sentry = require('@sentry/node');
 const Post = require('../../Models/Posts.model');
+const User = require('../../Models/User.model');
 // const baseUrl = process.env.NEXT_STATIC_BASE_URL || 'http://localhost:9000';
 
 const getPost = async (req, res) => {
@@ -27,10 +28,20 @@ const getAllPosts = async (req, res) => {
     // console.log('currentUser',currentUserId);
     const allPosts = await Post.find({
       userId: currentUserId,
-    })
-    .populate({path: 'userId', select: ['profilePhoto']});
-    // console.log(allPosts)
-    res.status(200).send({status: 'OK', data: allPosts});
+    }).populate({path: 'userId', select: ['profilePhoto']});
+
+    if (allPosts.length !== 0){
+      // console.log(allPosts)
+      res.send({status: 200, data: allPosts});
+    } else {
+      //Random posts for user with no posts created
+      const allRandomPosts = await Post.find().populate({
+        path: 'userId', select: ['profilePhoto']
+      }).limit(5);
+
+      res.send({status: 200, data: allRandomPosts});
+    }
+
     return;
     // res.status(200).send("Get all posts for current user");
   } catch (error) {
@@ -72,8 +83,17 @@ const createPost = async (req, res) => {
 
     if (!req.files || req.files && req.files.image.size < 5000000){
       console.log("entering here - why?");
+
       const createdPost = await Post.create(newPost);
-      console.log(createdPost);
+
+      const updatedUserData = await User.findByIdAndUpdate(
+        { _id: req.user._id },
+        { $push: { posts: createPost._id }
+      });
+
+      console.log('createdPost --> ',createdPost);
+      console.log('updatedUserData --> ',updatedUserData);
+
       res.json({status: 200, data: createdPost});
       return;
     }
