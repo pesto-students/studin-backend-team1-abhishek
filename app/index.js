@@ -36,11 +36,12 @@ app.use(function(req, res, next) {
 const issue2options = {
       credentials: true,
       origin: ['https://reliable-parfait-d19e25.netlify.app', "http://localhost:3000"],
+      methods: [ "HEAD", "PUT", "PATCH", "POST", "GET", "DELETE", "OPTIONS" ],
       optionsSuccessStatus: 200,
       // preflightContinue: true,
       
       // origin: '*',
-      // methods: [ "HEAD", "PUT", "PATCH", "POST", "GET", "DELETE", "OPTIONS" ],
+      
       // allowedHeaders: [
       //   "Content-Type",
       //   "Authorization",
