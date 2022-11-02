@@ -6,8 +6,15 @@ const {ACCESS_TOKEN_SECRET_KEY} = process.env;
 const requireAuth = async (req, res, next) => {
 
   try {
-    if (req.cookies.accessToken) {
-      const accessToken = req.cookies.accessToken.split(' ')[1];
+    // req.headers.accessToken
+    // if (req.cookies.accessToken) {
+    console.log("req.headers --> ");
+    console.log(req.headers);
+    if (req.headers){
+      const accessToken = req.headers["authorization"].split(' ')[1];
+      console.log("accessToken -->");
+      console.log(accessToken);
+      // const accessToken = req.cookies.accessToken.split(' ')[1];
       // const refreshToken = req.cookies.refreshToken.split(' ')[1];
       await jwt.verify(
         accessToken,
@@ -35,7 +42,8 @@ const requireAuth = async (req, res, next) => {
             next();
           } catch (err) {
             Sentry.captureException(err);
-            res.json({message:'Try after sometime', status: 401});
+            return;
+            // res.json({message:'Try after sometime', status: 401});
           }
         }
       )

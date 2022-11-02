@@ -20,32 +20,35 @@ const app = express();
 
 // middlewares
 app.use(express.static('public'));
-var corsPreflightHandler = function(req, res, next) {
-  // res.header('Access-Control-Allow-Origin', '*');
-  // res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-  // res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    
-  // intercept OPTIONS method
-  if ('OPTIONS' == req.method) {
-    res.send(200);
-  }
-  else {
-    next();
-  }
-};
-app.use(corsPreflightHandler);
+
+// app.use(async (req, res, next) => {
+//   if (req.method === 'OPTIONS') {
+//     res.send();
+//     return;
+//   }
+//   next();
+// });
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Credentials");
+  next();
+});
 const issue2options = {
       credentials: true,
-      // preflightContinue: true,
       origin: ['https://reliable-parfait-d19e25.netlify.app', "http://localhost:3000"],
+      optionsSuccessStatus: 200,
+      // preflightContinue: true,
+      
       // origin: '*',
       // methods: [ "HEAD", "PUT", "PATCH", "POST", "GET", "DELETE", "OPTIONS" ],
-      allowedHeaders: [
-        "Content-Type",
-        "Authorization",
-        "Access-Control-Allow-Credentials",
-        "Access-Control-Allow-Origin",
-      ],
+      // allowedHeaders: [
+      //   "Content-Type",
+      //   "Authorization",
+      //   "Access-Control-Allow-Credentials",
+      //   "Access-Control-Allow-Origin",
+      // ],
+      
+
 }
 // "x-csrf-token",
 // ],
