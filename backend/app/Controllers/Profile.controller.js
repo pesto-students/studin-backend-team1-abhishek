@@ -22,65 +22,70 @@ const getMyProfileSummary = async (req, res) => {
 };
 
 const getMyProfileDetails = async (req, res) => {
-  try {
-    res.json(req.user);
-  } catch (error) {
-   console.log(error)
-  }
-};
-
-const updateMyProfileDetails = async (req, res) => {
-  try {
-    if (!req.body) {
-      res.status(400).send('Insufficient data');
-  }
-
-  const {
-      userId, firstName, lastName, schoolName, collegeName, interests,
-  } = req.body;
-  const { profilePhoto, coverPhoto } = req.files;
-  console.log(req.user)
-
-  const imageResult = await cloudinary.uploader.upload(profilePhoto.tempFilePath, {
-      public_id: `${Date.now()}`,
-      resource_type: 'auto',
-      folder: 'studin/users-profile-images',
-  });
-
-  const imageResult2 = await cloudinary.uploader.upload(coverPhoto.tempFilePath, {
-      public_id: `${Date.now()}`,
-      resource_type: 'auto',
-      folder: 'studin/users-cover-images',
-  });
-
-  const payload = {
-      email: userId,
-      firstName: firstName,
-      lastName: lastName,
-      schoolName: schoolName,
-      collegeName: collegeName,
-      interests: interests,
-      profilePhoto: imageResult.secure_url,
-      coverPhoto: imageResult2.secure_url,
-  };
-  const updateuser = await User.findByIdAndUpdate(req.user._id, payload, {
-      new: true
-  });
-  } catch (error) {
-    return;
-  }
-};
-
-const getAllConnectionsDetails = async (req, res) => {
 	try {
-		return
+
+		const user = await User.findById(req.user._id).populate("posts", "imageUrl")
+		res.json(user)
 	} catch (error) {
-		return
+		console.log(error)
 	}
 };
 
+const updateMyProfileDetails = async (req, res) => {
+	try {
+		if (!req.body) {
+			res.status(400).send('Insufficient data');
+		}
+
+		const {
+			userId, firstName, lastName, schoolName, collegeName, interests,
+		} = req.body;
+		const { profilePhoto, coverPhoto } = req.files;
+
+
+		const imageResult = await cloudinary.uploader.upload(profilePhoto.tempFilePath, {
+			public_id: `${Date.now()}`,
+			resource_type: 'auto',
+			folder: 'studin/users-profile-images',
+		});
+
+		const imageResult2 = await cloudinary.uploader.upload(coverPhoto.tempFilePath, {
+			public_id: `${Date.now()}`,
+			resource_type: 'auto',
+			folder: 'studin/users-cover-images',
+		});
+
+		const payload = {
+			email: userId,
+			firstName: firstName,
+			lastName: lastName,
+			schoolName: schoolName,
+			collegeName: collegeName,
+			interests: interests,
+			profilePhoto: imageResult.secure_url,
+			coverPhoto: imageResult2.secure_url,
+		};
+		const updateuser = await User.findByIdAndUpdate(req.user._id, payload, {
+			new: true
+		});
+	} catch (error) {
+		return;
+	}
+};
+const getAllConnectionsDetails = async (req, res) => {
+	try {
+		const allconnections = await User.findById(req.user._id).populate("connections", "_id firstName lastName profilePhoto schoolName connections posts")
+		res.json({ allconnections });
+
+	} catch (error) {
+		console.log(error)
+	}
+};
 const getConnectionDetails = async (req, res) => {
 	try {
+		const connection = req.params;
+		const userdata = await User.findById({ _id: connection.user_id }).populate("connections", "_id firstName lastName profilePhoto schoolName connections posts")
+		res.status(200).json(userdata)
 		return
 	} catch (error) {
 		return
