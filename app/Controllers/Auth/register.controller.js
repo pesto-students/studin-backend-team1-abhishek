@@ -43,6 +43,7 @@ const register = async (req, res) => {
       .header("Origin-Allow-Credentials", true)
       .json({status: 200, accessToken: signedJwt, userId: newUser._id, userEmail: userId});
     console.log('cookie created successfully');
+
   } catch (error) {
       return res.send({
         status: 400,

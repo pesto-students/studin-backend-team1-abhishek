@@ -36,9 +36,9 @@ const UserSchema = new Schema({
     default: '',
   },
   interests: {
-    type: [String],
-    enum: ['Music', 'Art', 'Sports', 'Literature', 'History',
-      'Science', 'Technology', 'Gardening', 'Entertainment'],
+    type: String,
+    // enum: ['Music', 'Art', 'Sports', 'Literature', 'History',
+    //   'Science', 'Technology', 'Gardening', 'Entertainment'],
   },
   bio: {
     type: String,
