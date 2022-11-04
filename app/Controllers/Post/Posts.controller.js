@@ -43,6 +43,59 @@ const getAllPosts = async (req, res) => {
     return;
   }
 };
+
+const getMyPosts = async (req, res) => {
+  try {
+    // const {body} = req;
+    const currentUserId = req.user._id;
+    console.log("C-userId in inside MyPosts", currentUserId);
+
+    const myPosts = await Post.find({
+      userId: currentUserId,
+    }).populate({path: 'userId', select: ['profilePhoto']});
+
+    if (myPosts.length !== 0){
+
+      res.send({status: 200, data: myPosts});
+    } else {
+
+      res.send({status: 400, message: "You have not created a post yet!"});
+    }
+    return;
+
+  } catch (error) {
+    Sentry.captureException(error);
+    console.log(error);
+    console.log('Error occured when retrieving my posts');
+    return;
+  }
+};
+const getThirdPartyPosts = async (req, res) => {
+  try {
+    const {connectionId} = req.body;
+    const currentUserId = req.user._id;
+    console.log("C-userId in inside ThirdPartyPosts", currentUserId);
+
+    const thirdPosts = await Post.find({
+      userId: connectionId,
+    }).populate({path: 'userId', select: ['profilePhoto']});
+
+    if (thirdPosts.length !== 0){
+
+      res.send({status: 200, data: thirdPosts});
+    } else {
+
+      res.send({status: 400, message: "This connection has not posted yet!"});
+    }
+    return;
+
+  } catch (error) {
+    Sentry.captureException(error);
+    console.log(error);
+    console.log('Error occured when retrieving my posts');
+    return;
+  }
+};
 const createPost = async (req, res) => {
   try {
     const { body } = req;
@@ -199,6 +252,8 @@ const removeComment = async (req, res) => {
 module.exports = {
   getPost,
   getAllPosts,
+  getMyPosts,
+  getThirdPartyPosts,
   createPost,
   deletePost,
   addLike,
