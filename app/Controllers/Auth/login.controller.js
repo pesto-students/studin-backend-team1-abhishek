@@ -66,8 +66,7 @@ const login = async (req, res) => {
           console.log('cookie created successfully');
         }
     }
-    // console.log('OTP matches, login successful!');
-    // res.json({status: 201, message: 'Logged in and cookie created 100%'});
+
     return;
   } catch (error) {
     Sentry.captureException(error);

@@ -1,10 +1,8 @@
-// const {connectionService} = require('../services/Connections.service');
 
 const getAllConnections = async (req, res) => {
   try {
     const id = req.params.id;
     const allConnections = await 
-    // const post = await connectionService.usefulService(id);
     res.json(post);
     return;
   } catch (err) {

@@ -1,15 +1,11 @@
-// const postsService = require('../services/Posts.service')
+
 const cloudinary = require('../../Helpers/init_cloudinary');
 const Sentry = require('@sentry/node');
 const Post = require('../../Models/Posts.model');
 const User = require('../../Models/User.model');
-// const baseUrl = process.env.NEXT_STATIC_BASE_URL || 'http://localhost:9000';
 
 const getPost = async (req, res) => {
   try {
-    // const id = req.params.postId;
-    // const post = await getPost(id);
-    // const post = {id: "detailed post data"}
     res.json(post);
     return;
   } catch (err) {
@@ -21,17 +17,14 @@ const getPost = async (req, res) => {
 const getAllPosts = async (req, res) => {
   try {
     const {body} = req;
-    // const currentUser = await User.findOne({
-    //   email: body.email,
-    // });
     const currentUserId = req.user._id;
-    // console.log('currentUser',currentUserId);
+
     const allPosts = await Post.find({
       userId: currentUserId,
     }).populate({path: 'userId', select: ['profilePhoto']});
 
     if (allPosts.length !== 0){
-      // console.log(allPosts)
+
       res.send({status: 200, data: allPosts});
     } else {
       //Random posts for user with no posts created
@@ -41,9 +34,8 @@ const getAllPosts = async (req, res) => {
 
       res.send({status: 200, data: allRandomPosts});
     }
-
     return;
-    // res.status(200).send("Get all posts for current user");
+
   } catch (error) {
     Sentry.captureException(error);
     console.log(error);
@@ -54,10 +46,7 @@ const getAllPosts = async (req, res) => {
 const createPost = async (req, res) => {
   try {
     const { body } = req;
-    // if (!body.post_title || !body.post || !body.likes || !body.comments){
-    // return;
-    // }
-    console.log("req.files-->");
+
     let imageResult = '';
     if (req.files){
       const file = req.files.image;
@@ -97,7 +86,7 @@ const createPost = async (req, res) => {
       res.json({status: 200, data: createdPost});
       return;
     }
-    // res.json({status: 400, message: "Failed during file upload. File might be too large!"});
+
     return;
   } catch (error) {
     Sentry.captureException(error);
@@ -109,11 +98,9 @@ const createPost = async (req, res) => {
 
 const deletePost = async (req, res) => {
   try {
-    // const {id} = req.params;
-    // console.log();
     const deletedPost = await Post.deleteOne({post_title: 'Killer Miller'});
     res.status(200).json({status: 'OK', data: deletedPost});
-    // res.send("Deleted 1 post for current user");
+
     return;
   } catch (error) {
     console.log('Error occured when deleting post');
@@ -127,8 +114,6 @@ const addLike = async (req, res) => {
     currentUser = req.user._id;
 
     const postData = await Post.findOne({_id : postId}).populate({path: 'likes'});
-    // console.log("postData -->");
-    // console.log(postData);
 
     if (!postData.likes.includes(currentUser)){
 
@@ -160,8 +145,6 @@ const disLike = async (req, res) => {
     currentUser = req.user._id;
 
     const postData = await Post.findOne({_id : postId}).populate({path: 'likes'});
-    // console.log("postData -->");
-    // console.log(postData);
 
     if (!postData.likes.includes(currentUser)){
 
@@ -191,10 +174,8 @@ const disLike = async (req, res) => {
 const addComment = async (req, res) => {
   try {
     const {id} = req.params;
-    // console.log(id);
     const {author, text} = req.body;
     const oldDocument = await Post.updateOne(
-        // { _id: id },
         {post_title: 'Killer Miller'},
         {$push: {comments: {author, text}},
         });

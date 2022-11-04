@@ -5,8 +5,6 @@ const ConnectionRequest = require('../../Models/ConnectionRequest.model');
 const acceptConnectionRequest = async (req, res) => {
     try {
         const {connectionRequestId} = req.body;
-        // console.log("Printing inside accepting CR -->");
-        // console.log(connectionRequestId);
         const connectionReqData = await ConnectionRequest.findOneAndUpdate({ _id : connectionRequestId }, { isAccepted: true});
         const updatedUserConnections1 = await User.findOneAndUpdate(
             { _id: connectionReqData.senderId }, 

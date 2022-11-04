@@ -7,11 +7,6 @@ const OtpSchema = new Schema({
     type: MyObjectId, 
     ref: 'User'
   },
-  // loggedin_user: {
-    // type: String, 
-    // required: true, 
-    // unique: true 
-  // },
   email: {
     type: String,
     required: true

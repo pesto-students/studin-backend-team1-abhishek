@@ -1,25 +1,51 @@
 const jwt = require('jsonwebtoken');
-const tokenSecret = process.env.TOKEN_SECRET;
+const Sentry = require("@sentry/node");
+const User = require('../Models/User.model');
+const {ACCESS_TOKEN_SECRET_KEY} = process.env;
 
-const requireAuth = (req, res, next) => {
-    const authHeader = req.headers['authorization']
-    const token = authHeader && authHeader.split(' ')[1]
-    // const token = req.cookies.jwt;
-    //check if json web token exists & is verified
-    if (token) {
-        jwt.verify(token, tokenSecret, (err, decodedToken) => {
-            if (err){
-                console.log(err.message);
-                res.redirect('/login');
-            } else {
-                // console.log(decodedToken);
-                console.log('token-is-valid!')
-                next();
+const requireAuth = async (req, res, next) => {
+
+  try {
+
+    if (req.headers){
+      const accessToken = req.headers.authorization ? req.headers["authorization"].split(' ')[1] : '';
+
+      await jwt.verify(
+        accessToken,
+        ACCESS_TOKEN_SECRET_KEY,
+        async (err, decodedToken) => {
+          try {
+            // console.log("Step 1");
+            if (err) res.json({message: 'invalid token', status: 401});
+            const {payload} = decodedToken;
+            const user = await User.findOne({email: payload.email});
+            // console.log("Step 2");
+            if(!user){
+              Sentry.captureMessage('Invalid user details', 'warning');
+              res.json({message: 'Invalid user details', status: 400});
             }
-        })
-    } else {
-        res.redirect('/login');
-    }
-}
 
-module.exports = { requireAuth };
+            user.accessToken = accessToken;
+            req.user = user;
+
+            next();
+          } catch (err) {
+            Sentry.captureException(err);
+            return;
+          }
+        }
+      )
+
+    } else {
+      res
+        .json({ message: 'Cookie did not exist in requireAuth middleware check', status: 401});
+    }
+
+  } catch (error) {
+      console.log(error);
+      Sentry.captureException('Error occured during auth verification')
+  }
+
+};
+
+module.exports = {requireAuth};

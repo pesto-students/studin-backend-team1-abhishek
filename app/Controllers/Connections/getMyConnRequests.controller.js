@@ -4,9 +4,6 @@ const ConnectionRequest = require('../../Models/ConnectionRequest.model');
 
 const getMyConnRequests = async (req, res) => {
     try {
-        // console.log("Printing inside CRs -->");
-        // console.log(req.user._id);
-        // console.log(req.user.email);
         const myConnRequests = await ConnectionRequest.find({ receiverId: req.user._id, isAccepted: false })
         .populate({path: 'senderId', select: ['email', 'firstName', 'lastName', 'profilePhoto', 'schoolName']})
         .limit(5);

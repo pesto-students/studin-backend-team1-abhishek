@@ -1,4 +1,3 @@
-// const {liveStreamService} = require('../services/Livestream.service');
 
 const startLiveStream = async (req, res) => {
   try {
