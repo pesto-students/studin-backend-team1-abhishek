@@ -1,21 +1,48 @@
-# Pesto Assignments
 
-Welcome to Pesto assignments.
+# Steps to run the backend for StudIn
+
+1. `npm install`
+
+2. `npm run dev` to start the backend with nodemon
+(or)
+2. `node server.js` to start the backend without nodemon
+
+3. `lint:check` to verify style guide
+
+4. `lint:fix` to fix by style guide recommendations
 
 
-## How to solve assignments
 
-Weekly Assignments will be shared by your mentor or instructor.
 
-Make sure master or main branch is protected and you are not able to push any code directly to master.
+# Backend Architecture - MRC pattern is used for the separation of concerns.
 
-- Clone this repo to your local.
-- Checkout to new branch for submission. Suggestion you can name new branch week wise - branch for week 1 assignment can be week1
-```bash
-git checkout -b week1
-```
-- Create Assignment week folder in root directory(if it doesn't exist) for eg. for solving week 1 assignment create folder with name "week1".
-- You can create subfolders in main week(week1) folder if required.
-- Add proper readme [(How to Write proper readme](https://meakaakka.medium.com/a-beginners-guide-to-writing-a-kickass-readme-7ac01da88ab3) )in week's folder or subfolder explaining about assignment, how to run assignment and any other instructions. 
-- Raise a PR against master and add your mentor as reviewer
-- Resolve PR comments if any and once your mentor approves your PR, Merge it.
+## NodeJS style guide
+## Google styleguide has been used in the backend
+
+1. Indentation 2 spaces
+2. Functions, objects and variables use camelCase
+3. Constants use all caps
+4. File naming for Models, Controllers and Routes use
+    Test.model.js, Test.controller.js, Test.route.js
+
+
+## The below considerations have been followed while designing the folders in the backend:
+
+1. Separation of concerns. 
+Organizing functions and modules to ensure they have a single, clear task which ensures your code is easy to read and maintain.
+
+2. Modular architecture. 
+Composing your app in pieces that are isolated and easy to understand. This ensures your code is flexible and allows it to be recomposed for cron tasks, unit testing, etc.
+
+## To structure our API app we have used the “three-layer architecture”.
+
+1. Web layer. 
+Responsible for sending, receiving, and validating HTTP requests. Common configuration here includes routes, controllers, and middleware.
+ 
+2. Service layer. 
+Contains business logic.
+ 
+3. Data access layer. 
+Where we read and write to a database. We typically use an ORM like Mongoose or Sequelize.
+ 
+This architecture creates a good separation of concerns that will make it easy to read and maintain the code.
