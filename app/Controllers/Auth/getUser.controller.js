@@ -2,11 +2,11 @@ const User = require('../../Models/User.model');
 
 const getUser = async (req, res) => {
   try {
-    console.log('entered in create');
+    console.log('Fetching all users');
     const data = await User.find();
-    console.log('completed data creation');
+
     // console.log(data)
-    res.status(200).send(data);
+    res.json({status: 200, data: data});
     return;
   } catch (error) {
     return;

@@ -16,6 +16,6 @@ router.post('/profileimage', controllers.profileImage);
 router.get('/verifyUserLogin', requireAuth,controllers.verifyUserLogin);
 
 // router.post("/createUser", controllers.createUser);
-// router.get("/getUser", controllers.getUser);
+router.get("/getAllUsers", controllers.getUser);
 
 module.exports = router;

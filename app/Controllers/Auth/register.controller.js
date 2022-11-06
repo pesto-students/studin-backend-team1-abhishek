@@ -26,7 +26,7 @@ const register = async (req, res) => {
       lastName: lastName,
       schoolName: schoolName,
       collegeName: collegeName,
-      // interests: interests,
+      interests: interests,
       profilePhoto: imageResult.secure_url,
     };
     const newUser = await User.create(payload);
