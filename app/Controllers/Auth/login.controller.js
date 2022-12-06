@@ -7,6 +7,35 @@ const login = async (req, res) => {
   try {
     // console.log(req.body);
     const {email, otp} = req.body;
+
+    //Handling guest user credentials
+    if (email === 'guest@gmail.com' && otp === '123456') {
+      const signedJwt = createToken({'email': email}, "access");
+      const userData = await User.findOne({
+        email: email,
+      });
+      let responsePayload = {
+        userEmail: email,
+        accessToken: signedJwt,
+        status: 201 
+      }
+      if (userData){
+        responsePayload['userId'] = userData._id;
+      }
+      res
+        .cookie("accessToken", `Bearer ${signedJwt}`, {
+          httponly: true,
+          sameSite: "none",
+          secure: true,
+          maxAge: 1000 * 60 * 30,
+        })
+        .header("Access-Control-Allow-Credentials", true)
+        .header("Origin-Allow-Credentials", true)
+        .json(responsePayload);
+      console.log('cookie created successfully');
+      return
+    }
+
     const existingUser = await User.findOne({
       email: email,
     });
